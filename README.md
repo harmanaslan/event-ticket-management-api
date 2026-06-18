@@ -407,6 +407,7 @@ Beklenen sonuç:
 
 ## Proje Klasör Yapısı
 
+```text
 src
 ├── commons
 │   ├── interceptors
