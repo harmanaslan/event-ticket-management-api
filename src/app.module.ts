@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { EventsModule } from './events/events.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -19,6 +20,8 @@ import { EventsModule } from './events/events.module';
     }),
 
     EventsModule,
+
+    TicketsModule,
   ],
   controllers: [AppController],
 })
