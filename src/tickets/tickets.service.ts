@@ -4,9 +4,9 @@ import {
     Logger,
     NotFoundException,
   } from '@nestjs/common';
-  import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-  import { ClientSession, Connection, Model, Types } from 'mongoose';
-  import { Event, EventDocument } from '../events/schemas/event.schema';
+  import { InjectConnection } from '@nestjs/mongoose';
+  import { ClientSession, Connection } from 'mongoose';
+  import { EventRepository } from '../events/repositories/event.repository';
   import { BuyTicketDto } from './dto/buy-ticket.dto';
   import { TicketRepository } from './repositories/ticket.repository';
   
@@ -16,9 +16,7 @@ import {
 
     constructor(
       private readonly ticketRepository: TicketRepository,
-  
-      @InjectModel(Event.name)
-      private readonly eventModel: Model<EventDocument>,
+      private readonly eventRepository: EventRepository,
   
       @InjectConnection()
       private readonly connection: Connection,
@@ -30,25 +28,11 @@ import {
       session.startTransaction();
   
       try {
-        const event = await this.eventModel
-          .findOneAndUpdate(
-            {
-              _id: new Types.ObjectId(buyTicketDto.eventId),
-              availableTickets: {
-                $gte: buyTicketDto.quantity,
-              },
-            },
-            {
-              $inc: {
-                availableTickets: -buyTicketDto.quantity,
-              },
-            },
-            {
-              new: true,
-              session,
-            },
-          )
-          .exec();
+        const event = await this.eventRepository.decreaseAvailableTickets(
+          buyTicketDto.eventId,
+          buyTicketDto.quantity,
+          session,
+        );
   
         if (!event) {
           throw new BadRequestException('Etkinlik bulunamadi veya yeterli bilet yok');

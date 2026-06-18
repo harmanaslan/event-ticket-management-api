@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { EventRepository } from '../events/repositories/event.repository';
 import { Event, EventSchema } from '../events/schemas/event.schema';
 import { TicketRepository } from './repositories/ticket.repository';
 import { Ticket, TicketSchema } from './schemas/ticket.schema';
@@ -20,6 +21,6 @@ import { TicketsService } from './tickets.service';
     ]),
   ],
   controllers: [TicketsController],
-  providers: [TicketsService, TicketRepository],
+  providers: [TicketsService, TicketRepository, EventRepository],
 })
 export class TicketsModule {}
