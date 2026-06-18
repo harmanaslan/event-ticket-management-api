@@ -1,98 +1,441 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Event & Ticket Management API    18.06.2026  22:30
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Bu proje, kullanıcıların yaklaşan etkinlikleri listeleyebildiği ve etkinliklere bilet satın alabildiği bir NestJS API projesidir.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Proje MongoDB/Mongoose ile çalışır ve bilet satın alma işleminde MongoDB transaction/session kullanır.
 
-## Description
+## Kullanılan Teknolojiler
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* NestJS
+* MongoDB
+* Mongoose
+* TypeScript
+* Class Validator
+* Class Transformer
+* Swagger
+* MongoDB Transaction / Session
 
-## Project setup
+## Temel Özellikler
 
-```bash
-$ npm install
-```
+* Etkinlik oluşturma
+* Etkinlik listeleme
+* ID ile etkinlik görüntüleme
+* Bilet satın alma
+* Bilet listeleme
+* Generic Repository Pattern
+* Global Response Interceptor
+* Logging Interceptor
+* Custom Class Validator Decorator
+* Swagger API dokümantasyonu
+* MongoDB transaction/session ile güvenli bilet satın alma
 
-## Compile and run the project
+## Proje Kurulumu
 
-```bash
-# development
-$ npm run start
+Projeyi klonladıktan sonra bağımlılıkları yükleyin:
 
-# watch mode
-$ npm run start:dev
+npm install
 
-# production mode
-$ npm run start:prod
-```
+## Ortam Değişkenleri
 
-## Run tests
+Proje ana dizininde `.env` dosyası oluşturulmalıdır.
 
-```bash
-# unit tests
-$ npm run test
+Örnek local MongoDB bağlantısı:
 
-# e2e tests
-$ npm run test:e2e
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/event-ticket-management
 
-# test coverage
-$ npm run test:cov
-```
+Not: Local standalone MongoDB transaction/session desteklemez. Transaction testleri için MongoDB Atlas veya replica set destekli MongoDB bağlantısı kullanılmalıdır.
 
-## Deployment
+MongoDB Atlas replica set bağlantısı örneği:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+PORT=3000
+MONGODB_URI=mongodb://USERNAME:PASSWORD@HOST-1:27017,HOST-2:27017,HOST-3:27017/event-ticket-management?ssl=true&replicaSet=REPLICA_SET_NAME&authSource=admin&retryWrites=true&w=majority
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Güvenlik notu: `.env` dosyası GitHub’a gönderilmemelidir.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+## Projeyi Çalıştırma
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Geliştirme modunda çalıştırmak için:
 
-## Resources
+npm run start:dev
 
-Check out a few resources that may come in handy when working with NestJS:
+API varsayılan olarak şu adreste çalışır:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+http://localhost:3000
 
-## Support
+Swagger dokümantasyonu:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+http://localhost:3000/api-docs
 
-## Stay in touch
+## API Response Formatı
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Tüm başarılı response’lar global response interceptor üzerinden standart formatta döner:
 
-## License
+{
+  "success": true,
+  "timestamp": "2026-06-18T19:00:00.000Z",
+  "data": {}
+}
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Events Endpoints
+
+### POST /events
+
+Yeni etkinlik oluşturur.
+
+Örnek request body:
+
+{
+  "title": "Atlas Test Event",
+  "description": "MongoDB Atlas transaction test",
+  "startDate": "2026-07-01T19:00:00.000Z",
+  "totalTickets": 100,
+  "ticketPrice": 250
+}
+
+Kurallar:
+
+* `title` zorunludur.
+* `description` zorunludur.
+* `startDate` geçerli tarih formatında olmalıdır.
+* `startDate` bugünden en az 3 gün sonra olmalıdır.
+* `totalTickets` minimum 1 olmalıdır.
+* `ticketPrice` minimum 1 olmalıdır.
+* `availableTickets` kullanıcıdan alınmaz, otomatik olarak `totalTickets` değeri ile oluşturulur.
+
+Başarılı response örneği:
+
+{
+  "success": true,
+  "timestamp": "2026-06-18T19:11:47.902Z",
+  "data": {
+    "title": "Atlas Test Event",
+    "description": "MongoDB Atlas transaction test",
+    "startDate": "2026-07-01T19:00:00.000Z",
+    "totalTickets": 100,
+    "availableTickets": 100,
+    "ticketPrice": 250,
+    "_id": "68a3442f30b50f94f3707a0c5",
+    "createdAt": "2026-06-18T19:11:47.788Z",
+    "updatedAt": "2026-06-18T19:11:47.788Z"
+  }
+}
+
+### GET /events
+
+Tüm etkinlikleri listeler.
+
+Örnek response:
+
+{
+  "success": true,
+  "timestamp": "2026-06-18T19:16:27.029Z",
+  "data": [
+    {
+      "_id": "68a3442f30b50f94f3707a0c5",
+      "title": "Atlas Test Event",
+      "description": "MongoDB Atlas transaction test",
+      "startDate": "2026-07-01T19:00:00.000Z",
+      "totalTickets": 100,
+      "availableTickets": 98,
+      "ticketPrice": 250,
+      "createdAt": "2026-06-18T19:11:47.788Z",
+      "updatedAt": "2026-06-18T19:18:19.159Z"
+    }
+  ]
+}
+
+### GET /events/:id
+
+ID ile tek etkinlik getirir.
+
+Örnek endpoint:
+
+GET /events/68a3442f30b50f94f3707a0c5
+
+Etkinlik bulunamazsa `404 Not Found` döner.
+
+## Tickets Endpoints
+
+### POST /tickets/buy
+
+Bir etkinlik için bilet satın alır.
+
+Örnek request body:
+
+{
+  "eventId": "68a3442f30b50f94f3707a0c5",
+  "buyerName": "AslanHarman",
+  "buyerEmail": "harmandevopler@gmail.com",
+  "quantity": 2
+}
+
+Başarılı işlemde:
+
+* Ticket kaydı oluşturulur.
+* Event üzerindeki `availableTickets` değeri satın alınan adet kadar azaltılır.
+* `totalPrice`, `ticketPrice * quantity` şeklinde hesaplanır.
+* İşlem MongoDB transaction/session içinde yapılır.
+
+Örnek hesaplama:
+
+ticketPrice: 250
+quantity: 2
+totalPrice: 500
+availableTickets: 100 → 98
+
+Başarılı response örneği:
+
+{
+  "success": true,
+  "timestamp": "2026-06-18T19:18:11.308Z",
+  "data": {
+    "ticket": {
+      "event": "68a3442f30b50f94f3707a0c5",
+      "buyerName": "AslanHarman",
+      "buyerEmail": "harmandevopler@gmail.com",
+      "quantity": 2,
+      "totalPrice": 500,
+      "_id": "68a3443e0a5d694f3707e0c6",
+      "createdAt": "2026-06-18T19:18:11.078Z",
+      "updatedAt": "2026-06-18T19:18:11.078Z"
+    },
+    "event": {
+      "_id": "68a3442f30b50f94f3707a0c5",
+      "title": "Atlas Test Event",
+      "description": "MongoDB Atlas transaction test",
+      "startDate": "2026-07-01T19:00:00.000Z",
+      "totalTickets": 100,
+      "availableTickets": 98,
+      "ticketPrice": 250,
+      "createdAt": "2026-06-18T19:11:47.788Z",
+      "updatedAt": "2026-06-18T19:18:19.159Z"
+    }
+  }
+}
+
+Yeterli bilet yoksa veya event bulunamazsa işlem yapılmaz ve hata döner:
+
+{
+  "message": "Etkinlik bulunamadı veya yeterli bilet yok",
+  "error": "Bad Request",
+  "statusCode": 400
+}
+
+### GET /tickets
+
+Tüm biletleri listeler.
+
+## Generic Repository Pattern
+
+Projede ortak veritabanı işlemleri için abstract `BaseRepository` sınıfı kullanılmıştır.
+
+Dosya:
+
+src/commons/repositories/base.repository.ts
+
+Bu sınıf temel olarak şu metotları sağlar:
+
+* `find`
+* `findOne`
+* `findById`
+* `create`
+* `update`
+
+`EventRepository` ve `TicketRepository`, bu base repository üzerinden çalışır.
+
+Event repository dosyası:
+
+src/events/repositories/event.repository.ts
+
+Ticket repository dosyası:
+
+src/tickets/repositories/ticket.repository.ts
+
+Bu sayede servisler doğrudan Mongoose model ile konuşmak yerine repository katmanı üzerinden veritabanı işlemlerini yapar.
+
+## Custom Validator
+
+Event oluştururken `startDate` alanı için özel validator kullanılmıştır.
+
+Dosya:
+
+src/commons/validators/is-advanced-date.validator.ts
+
+Decorator:
+
+@IsAdvancedDate()
+
+Kural:
+
+Etkinlik tarihi bugünden en az 3 gün sonra olmalıdır.
+
+Geçersiz tarih örneğinde dönen hata:
+
+{
+  "message": [
+    "startDate must be at least 3 days after today"
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+
+## Interceptorlar
+
+### ResponseInterceptor
+
+Dosya:
+
+src/commons/interceptors/response.interceptor.ts
+
+Başarılı response’ları standart formata çevirir.
+
+Standart response formatı:
+
+{
+  "success": true,
+  "timestamp": "...",
+  "data": {}
+}
+
+### LoggingInterceptor
+
+Dosya:
+
+src/commons/interceptors/logging.interceptor.ts
+
+Her request için method, URL ve işlem süresini NestJS Logger ile loglar.
+
+Örnek:
+
+POST /tickets/buy 367ms
+GET /events 133ms
+
+## Transaction Mantığı
+
+Bilet satın alma işlemi `POST /tickets/buy` endpointinde MongoDB transaction/session ile yapılır.
+
+İşlem sırasında:
+
+1. MongoDB session başlatılır.
+2. Transaction başlatılır.
+3. Event, `availableTickets >= quantity` şartı ile aranır.
+4. Yeterli bilet varsa `availableTickets` değeri `$inc` ile azaltılır.
+5. Ticket kaydı aynı session içinde oluşturulur.
+6. İşlem başarılıysa transaction commit edilir.
+7. Hata olursa transaction rollback yapılır.
+8. Session kapatılır.
+
+Bu sayede:
+
+* Ticket oluşup event güncellenmeden kalmaz.
+* Event güncellenip ticket oluşmadan kalmaz.
+* `availableTickets` eksiye düşmez.
+
+## Önemli Transaction Notu
+
+MongoDB transaction/session kullanımı için MongoDB’nin replica set destekli çalışması gerekir.
+
+Local standalone MongoDB ile transaction testlerinde hata alınabilir.
+
+Bu nedenle transaction testi için:
+
+* MongoDB Atlas
+* Local MongoDB replica set
+* Replica set destekli MongoDB deployment
+
+kullanılmalıdır.
+
+## Test Edilen Senaryolar
+
+Aşağıdaki senaryolar Swagger üzerinden test edilmiştir:
+
+* Event oluşturma başarılı.
+* Event listeleme başarılı.
+* ID ile event getirme başarılı.
+* Geçersiz tarih ile event oluşturma 400 döndürür.
+* Bilet satın alma başarılı.
+* `availableTickets` doğru şekilde azalır.
+* `totalPrice` doğru hesaplanır.
+* Yetersiz bilet talebinde 400 döner.
+* Yetersiz bilet talebinde `availableTickets` eksiye düşmez.
+* ResponseInterceptor başarılı response’ları standart formata çevirir.
+* LoggingInterceptor request method, URL ve süre bilgisini loglar.
+
+## Örnek Test Akışı
+
+Önce event oluşturulur:
+
+{
+  "title": "Atlas Test Event",
+  "description": "MongoDB Atlas transaction test",
+  "startDate": "2026-07-01T19:00:00.000Z",
+  "totalTickets": 100,
+  "ticketPrice": 250
+}
+
+Sonra dönen `_id` ile bilet alınır:
+
+{
+  "eventId": "68a3442f30b50f94f3707a0c5",
+  "buyerName": "AslanHarman",
+  "buyerEmail": "harmandevopler@gmail.com",
+  "quantity": 2
+}
+
+Beklenen sonuç:
+
+availableTickets: 100 → 98
+totalPrice: 500
+
+Fazla bilet testi:
+
+{
+  "eventId": "68a3442f30b50f94f3707a0c5",
+  "buyerName": "Test User",
+  "buyerEmail": "test@example.com",
+  "quantity": 123456
+}
+
+Beklenen sonuç:
+
+{
+  "message": "Etkinlik bulunamadı veya yeterli bilet yok",
+  "error": "Bad Request",
+  "statusCode": 400
+}
+
+## Proje Klasör Yapısı
+
+src
+├── commons
+│   ├── interceptors
+│   │   ├── logging.interceptor.ts
+│   │   └── response.interceptor.ts
+│   ├── repositories
+│   │   └── base.repository.ts
+│   └── validators
+│       └── is-advanced-date.validator.ts
+├── events
+│   ├── dto
+│   │   └── create-event.dto.ts
+│   ├── repositories
+│   │   └── event.repository.ts
+│   ├── schemas
+│   │   └── event.schema.ts
+│   ├── events.controller.ts
+│   ├── events.module.ts
+│   └── events.service.ts
+├── tickets
+│   ├── dto
+│   │   └── buy-ticket.dto.ts
+│   ├── repositories
+│   │   └── ticket.repository.ts
+│   ├── schemas
+│   │   └── ticket.schema.ts
+│   ├── tickets.controller.ts
+│   ├── tickets.module.ts
+│   └── tickets.service.ts
+├── app.controller.ts
+├── app.module.ts
+└── main.ts
