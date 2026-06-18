@@ -51,7 +51,7 @@ import {
           .exec();
   
         if (!event) {
-          throw new BadRequestException('Etkinlik bulunamadı veya yeterli bilet yok');
+          throw new BadRequestException('Etkinlik bulunamadi veya yeterli bilet yok');
         }
   
         const totalPrice = event.ticketPrice * buyTicketDto.quantity;
@@ -75,7 +75,7 @@ import {
         };
       } catch (error) {
         this.logger.error(
-          'Bilet satın alma işlemi başarısız oldu',
+          'Bilet satin alma islemi basarisiz oldu',
           error instanceof Error ? error.stack : String(error),
         );
 
@@ -88,7 +88,7 @@ import {
           throw error;
         }
   
-        throw new BadRequestException('TBilet satın alma işlemi başarısız oldu');
+        throw new BadRequestException('Bilet satin alma islemi basarisiz oldu');
       } finally {
         await session.endSession();
       }
