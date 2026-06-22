@@ -1,8 +1,9 @@
 import {
     BadRequestException,
+    HttpException,
     Injectable,
+    InternalServerErrorException,
     Logger,
-    NotFoundException,
   } from '@nestjs/common';
   import { InjectConnection } from '@nestjs/mongoose';
   import { ClientSession, Connection } from 'mongoose';
@@ -65,14 +66,13 @@ import {
 
         await session.abortTransaction();
   
-        if (
-          error instanceof BadRequestException ||
-          error instanceof NotFoundException
-        ) {
+        if (error instanceof HttpException) {
           throw error;
         }
   
-        throw new BadRequestException('Bilet satin alma islemi basarisiz oldu');
+        throw new InternalServerErrorException(
+          'Bilet satin alma islemi basarisiz oldu',
+        );
       } finally {
         await session.endSession();
       }

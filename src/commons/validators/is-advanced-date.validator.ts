@@ -16,8 +16,12 @@ import {
             if (!value) {
               return false;
             }
+
+            if (typeof value !== 'string') {
+              return false;
+            }
   
-            const eventDate = new Date(value as string);
+            const eventDate = new Date(value);
             const now = new Date();
   
             if (Number.isNaN(eventDate.getTime())) {
