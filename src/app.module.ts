@@ -5,6 +5,9 @@ import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
+import { HallsModule } from './halls/halls.module';
+import { MoviesModule } from './movies/movies.module';
+import { SessionsModule } from './sessions/sessions.module';
 import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
@@ -31,6 +34,12 @@ import { TicketsModule } from './tickets/tickets.module';
     TicketsModule,
 
     AuthModule,
+
+    HallsModule,
+
+    MoviesModule,
+
+    SessionsModule,
   ],
   controllers: [AppController],
 })
