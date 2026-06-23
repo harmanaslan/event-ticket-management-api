@@ -29,6 +29,7 @@ async function bootstrap() {
     .setTitle('Event & Ticket Management API')
     .setDescription('Event and ticket management API built with NestJS and MongoDB')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

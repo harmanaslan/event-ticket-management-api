@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as Joi from 'joi';
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
 import { TicketsModule } from './tickets/tickets.module';
 
@@ -13,6 +14,7 @@ import { TicketsModule } from './tickets/tickets.module';
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().default(3000),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
 
@@ -27,6 +29,8 @@ import { TicketsModule } from './tickets/tickets.module';
     EventsModule,
 
     TicketsModule,
+
+    AuthModule,
   ],
   controllers: [AppController],
 })
