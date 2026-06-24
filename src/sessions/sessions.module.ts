@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
 import { HallsModule } from '../halls/halls.module';
 import { MoviesModule } from '../movies/movies.module';
+import { ReservationsModule } from '../reservations/reservations.module';
 import { SessionRepository } from './repositories/session.repository';
 import { Session, SessionSchema } from './schemas/session.schema';
 import { SessionsController } from './sessions.controller';
@@ -13,6 +14,7 @@ import { SessionsService } from './sessions.service';
     AuthModule,
     MoviesModule,
     HallsModule,
+    forwardRef(() => ReservationsModule),
     MongooseModule.forFeature([
       {
         name: Session.name,
@@ -22,5 +24,6 @@ import { SessionsService } from './sessions.service';
   ],
   controllers: [SessionsController],
   providers: [SessionsService, SessionRepository],
+  exports: [SessionsService],
 })
 export class SessionsModule {}

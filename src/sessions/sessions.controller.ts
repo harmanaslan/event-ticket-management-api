@@ -27,6 +27,12 @@ export class SessionsController {
     return this.sessionsService.findAll();
   }
 
+  @Get(':id/seats')
+  @ApiOperation({ summary: 'Get seat availability for a session' })
+  getSeatAvailability(@Param('id') id: string) {
+    return this.sessionsService.getSeatAvailability(id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get session by id' })
   findOne(@Param('id') id: string) {

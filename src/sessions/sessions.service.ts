@@ -1,7 +1,15 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
+import {
+  getSessionSeatsCacheKey,
+  SESSION_SEATS_CACHE_TTL_SECONDS,
+} from '../cache/cache.constants';
+import { CacheService } from '../cache/cache.service';
+import { generateSeatList } from '../commons/utils/seat.util';
 import { HallsService } from '../halls/halls.service';
+import { HallDocument } from '../halls/schemas/hall.schema';
 import { MoviesService } from '../movies/movies.service';
+import { ReservationRepository } from '../reservations/repositories/reservation.repository';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { SessionRepository } from './repositories/session.repository';
 
@@ -11,6 +19,8 @@ export class SessionsService {
     private readonly sessionRepository: SessionRepository,
     private readonly moviesService: MoviesService,
     private readonly hallsService: HallsService,
+    private readonly reservationRepository: ReservationRepository,
+    private readonly cacheService: CacheService,
   ) {}
 
   async create(createSessionDto: CreateSessionDto) {
@@ -49,5 +59,61 @@ export class SessionsService {
     }
 
     return session;
+  }
+
+  async getSeatAvailability(sessionId: string) {
+    const cacheKey = getSessionSeatsCacheKey(sessionId);
+    const cached = await this.cacheService.get(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const seatAvailability = await this.buildSeatAvailability(sessionId);
+
+    await this.cacheService.set(
+      cacheKey,
+      seatAvailability,
+      SESSION_SEATS_CACHE_TTL_SECONDS,
+    );
+
+    return seatAvailability;
+  }
+
+  private async buildSeatAvailability(sessionId: string) {
+    const session = await this.sessionRepository.findByIdPopulated(sessionId);
+
+    if (!session) {
+      throw new NotFoundException('Session not found');
+    }
+
+    const hall = session.hallId as unknown as HallDocument;
+    const activeReservations =
+      await this.reservationRepository.findActiveBySession(sessionId);
+
+    const reservationMap = new Map(
+      activeReservations.map((reservation) => [
+        reservation.seatCode,
+        reservation.status,
+      ]),
+    );
+
+    const seats = generateSeatList(hall.rowCount, hall.seatsPerRow).map(
+      (seat) => ({
+        ...seat,
+        status: reservationMap.get(seat.seatCode) ?? 'AVAILABLE',
+      }),
+    );
+
+    return {
+      sessionId: session._id.toString(),
+      hall: {
+        id: hall._id.toString(),
+        name: hall.name,
+        rowCount: hall.rowCount,
+        seatsPerRow: hall.seatsPerRow,
+      },
+      seats,
+    };
   }
 }
